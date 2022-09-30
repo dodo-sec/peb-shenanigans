@@ -20,7 +20,7 @@ void main()
 
 	//print PEB address
 
-	printf("PEB is at 0x%llx\n", peb);
+	printf("PEB is at 0x%p\n", peb);
 
 	//get _LDR_DATA from PEB
 
@@ -28,35 +28,31 @@ void main()
 
 	//print module lists addresses
 
-	unsigned long long in_load_addr = &ldr->InLoadOrderModuleList;
+	PLIST_ENTRY load_head = &ldr->InLoadOrderModuleList;	//use first node of LIST_ENTRY as head
 
-	unsigned long long in_memory_addr = &ldr->InMemoryOrderModuleList;
+	PLIST_ENTRY memory_head = &ldr->InMemoryOrderModuleList;
 
-	unsigned long long in_init_addr = &ldr->InInitializationOrderModuleList;
+	PLIST_ENTRY init_head = &ldr->InInitializationOrderModuleList;
 
-	printf("InLoadOrderModuleList is at 0x%llx\n", in_load_addr);	//these pointers don't need dereferencing because they point at the lists themselves
+	printf("InLoadOrderModuleList is at 0x%p\n", load_head);
 
-	printf("InMemoryOrderModuleList is at 0x%llx\n", in_memory_addr);
+	printf("InMemoryOrderModuleList is at 0x%p\n", memory_head);
 
-	printf("InInitializationOrderModuleList is at 0x%llx\n", in_init_addr);
-
-	//get first node in InMemoryOrderModuleList list
-
-	PLIST_ENTRY list_head = &ldr->InLoadOrderModuleList;
-
-	PLIST_ENTRY next_entry = InLoadOrderHead->Flink;
+	printf("InInitializationOrderModuleList is at 0x%p\n", init_head);
 
 	//loop the list while printing module names
+	
+	PLIST_ENTRY next = load_head->Flink;
 
-	while (next_entry != list_head)	//code for walking the list stolen from smelly-vx (https://github.com/vxunderground/VX-API/blob/main/VX-API/RemoveDllFromPeb.cpp)
+	while (next != load_head)	//code for walking the list stolen from smelly-vx (https://github.com/vxunderground/VX-API/blob/main/VX-API/RemoveDllFromPeb.cpp)
 	{
-		PLDR_MODULE module = next_entry;
+		PLDR_MODULE module = next;
 
 		PWSTR module_name = module->FullDllName.Buffer;
 
 		printf("Module name is %S\n", module_name);
 
-		next_entry = next_entry->Flink;
+		next = next->Flink;
 	}
 
 }
