@@ -50,7 +50,7 @@ void main()
 
 	//loop the list while printing module names
 
-	while (Next != InMemoryListHead)
+	while (Next != InMemoryListHead)	//code for walking the list stolen from smelly-vx (https://github.com/vxunderground/VX-API/blob/main/VX-API/RemoveDllFromPeb.cpp)
 	{
 		PLDR_MODULE PModule = Next;
 
