@@ -20,9 +20,7 @@ void main()
 
 	//print PEB address
 
-	unsigned long long int *PEBAddr = &pointPEB;
-
-	printf("PEB is at 0x%llx\n", *PEBAddr);	//we dereference PEBAddr here because it points to a pointer that points to PEB
+	printf("PEB is at 0x%llx\n", pointPEB);	//we dereference PEBAddr here because it points to a pointer that points to PEB
 
 	//get _LDR_DATA from PEB
 
